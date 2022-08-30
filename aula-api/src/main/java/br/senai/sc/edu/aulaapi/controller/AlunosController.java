@@ -14,6 +14,8 @@ import java.util.Optional;
 public class AlunosController {
 
     private List<Aluno> listaAlunos = new ArrayList<>();
+    
+    
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     public String criarAluno(@RequestBody Aluno aluno){
@@ -31,5 +33,36 @@ public class AlunosController {
         Aluno first = listaAlunos.stream().filter(a -> a.getCodigo() == codigo).findFirst().get();
         return new ResponseEntity<>(first, HttpStatus.OK);
     }
+    @PutMapping("/alterar/{codigo}")
+    public ResponseEntity<Aluno> alterar(@RequestBody Aluno aluno, 
+                                         @PathVariable("codigo") Long codigo){
+
+        listaAlunos.stream().filter(a -> a.getCodigo() == codigo).forEach(a -> {
+            a.setNome(aluno.getNome());
+            a.setEndereco(aluno.getEndereco());
+        });
+        
+        return new ResponseEntity(aluno, HttpStatus.OK);
+    }
+
+    @PatchMapping("/alterar-endereco/{codigo}")
+    public ResponseEntity<Aluno> alterarEndereco(@RequestBody Aluno aluno,
+                                         @PathVariable("codigo") Long codigo){
+
+        listaAlunos.stream().filter(a -> a.getCodigo() == codigo).forEach(a -> {
+            a.setEndereco(aluno.getEndereco());
+        });
+
+        return new ResponseEntity(aluno, HttpStatus.OK);
+    }
+    @DeleteMapping("/delete/{codigo}")
+    public ResponseEntity excluir(@PathVariable("codigo") Long codigo){
+        listaAlunos.stream().filter(a -> a.getCodigo() == codigo).forEach(a -> {
+            listaAlunos.remove(a);
+        });
+        return new ResponseEntity("Aluno excluído com sucesso", HttpStatus.OK);
+    }
+
+
 
 }
