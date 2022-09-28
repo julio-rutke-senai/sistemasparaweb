@@ -1,12 +1,13 @@
 package br.senai.sc.edu.aulaapi.controller;
 
 import br.senai.sc.edu.aulaapi.model.Aluno;
-import br.senai.sc.edu.aulaapi.repository.AlunoRepository;
+import br.senai.sc.edu.aulaapi.repository.dto.AlunoContatoDTO;
+import br.senai.sc.edu.aulaapi.repository.dto.NovoAlunoDTO;
+import br.senai.sc.edu.aulaapi.service.AlunoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,25 +15,22 @@ import java.util.Optional;
 @RequestMapping("/aluno")
 public class AlunosController {
 
-    private List<Aluno> listaAlunos = new ArrayList<>();
+    private final AlunoService alunoService;
 
-    private final AlunoRepository alunoRepository;
-
-    public AlunosController(AlunoRepository alunoRepository) {
-        this.alunoRepository = alunoRepository;
+    public AlunosController(AlunoService alunoService) {
+        this.alunoService = alunoService;
     }
-
 
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
-    public String criarAluno(@RequestBody Aluno aluno){
-        alunoRepository.save(aluno);
+    public String criarAluno(@RequestBody NovoAlunoDTO aluno){
+        alunoService.salvar(aluno);
         return "Aluno adicionado com sucesso";
     }
 
     @GetMapping("/lista")
-    public ResponseEntity<List<Aluno>> listarAlunos(){
-        return new ResponseEntity<>(alunoRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<AlunoContatoDTO>> listarAlunos(){
+        return new ResponseEntity<>(alunoService.listarContatos(), HttpStatus.OK);
     }
 
 
