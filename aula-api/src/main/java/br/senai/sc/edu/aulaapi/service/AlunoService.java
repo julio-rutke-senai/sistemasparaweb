@@ -43,6 +43,10 @@ public class AlunoService {
         return alunoContatoDTOStream;
     }
 
+    public AlunoRepository getRepo(){
+        return alunoRepository;
+    }
+
 
 
 }

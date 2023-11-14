@@ -36,23 +36,23 @@ public class AlunosController {
 
     @GetMapping("/listaPorNome")
     public ResponseEntity<List<Aluno>> listarAlunosPorNome(@RequestParam("nome") String nome){
-        return new ResponseEntity<>(alunoRepository.findByNomeIgnoreCaseContains(nome), HttpStatus.OK);
+        return new ResponseEntity<>(alunoService.getRepo().findByNomeIgnoreCaseContains(nome), HttpStatus.OK);
     }
 
     @GetMapping("/{codigo}")
     public ResponseEntity<Aluno> getAluno(@PathVariable("codigo") Long codigo){
-        return new ResponseEntity<>(alunoRepository.findById(codigo).get(), HttpStatus.OK);
+        return new ResponseEntity<>(alunoService.getRepo().findById(codigo).get(), HttpStatus.OK);
     }
 
     @PutMapping("/alterar/{codigo}")
     public ResponseEntity<Aluno> alterar(@RequestBody Aluno aluno,
                                          @PathVariable("codigo") Long codigo){
-        Optional<Aluno> alunoOptional = alunoRepository.findById(codigo);
+        Optional<Aluno> alunoOptional = alunoService.getRepo().findById(codigo);
         if (alunoOptional.isPresent()){
             Aluno alunoPersistir = alunoOptional.get();
             alunoPersistir.setNome(aluno.getNome());
             alunoPersistir.setEndereco(aluno.getEndereco());
-            alunoRepository.save(alunoPersistir);
+            alunoService.getRepo().save(alunoPersistir);
         }
         return new ResponseEntity(aluno, HttpStatus.OK);
     }
@@ -61,15 +61,11 @@ public class AlunosController {
     public ResponseEntity<Aluno> alterarEndereco(@RequestBody Aluno aluno,
                                          @PathVariable("codigo") Long codigo){
 
-        listaAlunos.stream().filter(a -> a.getCodigo() == codigo).forEach(a -> {
-            a.setEndereco(aluno.getEndereco());
-        });
-
         return new ResponseEntity(aluno, HttpStatus.OK);
     }
     @DeleteMapping("/delete/{codigo}")
     public ResponseEntity excluir(@PathVariable("codigo") Long codigo){
-        alunoRepository.deleteById(codigo);
+        alunoService.getRepo().deleteById(codigo);
         return new ResponseEntity("Aluno excluído com sucesso", HttpStatus.OK);
     }
 
