@@ -29,12 +29,6 @@ public class UserDetailsServiceCustom implements UserDetailsService {
         if(!usuario.isPresent())
             new UsernameNotFoundException("Usuário não encontrado!");
 
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(usuario.get().getPermissao());
-        Set<GrantedAuthority> authorities = new HashSet();
-        authorities.add(authority);
-
-        User user = new User(usuario.get().getEmail(), usuario.get().getSenha(), authorities);
-
-        return user;
+        return new UserDetailsCustom(usuario);
     }
 }
